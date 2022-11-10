@@ -23,17 +23,17 @@ app.get("/api/hello", function (req, res) {
     res.json({ greeting: "hello API" })
 })
 
-app.get("/api/:date", async (req, res) => {
-    let date = Number(req.params.date)
+app.get("/api/:date", (req, res) => {
+    let date = parseInt(req.params.date)
     let data = new Date(date)
-    if (data.getTime() <= 0) {
-        res.json({ error: "Invalid Date" })
+    if (data.toString() == "Invalid Date") {
+        return res.json({ error: "Invalid Date" })
     }
 
-    res.json({ unix: Number(req.params.date), utc: data.toUTCString() })
+    return res.json({ unix: data.valueOf(), utc: data.toUTCString() })
 })
 
 // listen for requests :)
-var listener = app.listen(9000 | process.env.PORT, function () {
+var listener = app.listen(process.env.PORT, function () {
     console.log("Your app is listening on port " + listener.address().port)
 })
