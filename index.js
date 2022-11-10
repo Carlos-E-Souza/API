@@ -23,14 +23,24 @@ app.get("/api/hello", function (req, res) {
     res.json({ greeting: "hello API" })
 })
 
-app.get("/api/:date", (req, res) => {
-    let date = parseInt(req.params.date)
-    let data = new Date(date)
-    if (data.toString() == "Invalid Date") {
-        return res.json({ error: "Invalid Date" })
+app.get("/api", (req, res) => {
+    let data = new Date()
+    res.json({ unix: data.valueOf(), utc: data.toUTCString() })
+})
+
+app.get("/api/:date?", (req, res) => {
+    let date = req.params.date
+    if (/^\d{5,}$/.test(date)) {
+        date = parseInt(date)
     }
 
-    return res.json({ unix: data.valueOf(), utc: data.toUTCString() })
+    const data = new Date(date)
+
+    if (data.toString() == "Invalid Date") {
+        res.json({ error: "Invalid Date" })
+    } else {
+        res.json({ unix: data.valueOf(), utc: data.toUTCString() })
+    }
 })
 
 // listen for requests :)
